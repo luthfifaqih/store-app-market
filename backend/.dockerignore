@@ -1,0 +1,12 @@
+.env*
+.git
+.agents
+.codex
+.claude
+vendor
+node_modules
+storage
+bootstrap/cache
+public/storage
+tests
+.phpunit.result.cache

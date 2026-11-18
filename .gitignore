@@ -1,0 +1,6 @@
+.env
+.env.*
+!.env.example
+/.npm-cache/
+/.composer-cache/
+/.mysql-test/

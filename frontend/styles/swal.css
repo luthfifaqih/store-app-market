@@ -1,0 +1,13 @@
+.swal2-container.store-alert-layer { z-index: 20000; pointer-events: auto; font-family: var(--ui-font); }
+.store-alert-layer.swal2-backdrop-show { backdrop-filter: blur(3px); }
+.store-alert-layer .store-alert { width: min(90vw, 30rem); border-radius: 22px; padding-bottom: 1.3rem; color: var(--ui-ink); font-family: var(--ui-font); }
+.store-alert-layer .swal2-html-container { white-space: pre-line; overflow-wrap: anywhere; }
+.store-alert-layer .swal2-actions { gap: .6rem; }
+.store-alert-layer button:is(.store-alert-primary,.store-alert-danger,.store-alert-cancel) { min-height: 44px; padding: .5rem 1.2rem; border: 1px solid transparent; border-radius: 14px; font-weight: 600; }
+.store-alert-primary { background: var(--ui-primary); color: #171128; }
+.store-alert-danger { background: var(--ui-danger); color: white; }
+.store-alert-layer button.store-alert-cancel { background: white; color: #353343; border-color: #b8b4c5; }
+.store-alert-layer :focus-visible { outline: 3px solid var(--ui-action); outline-offset: 2px; }
+.store-alert-layer .swal2-toast.store-alert { width: 100%; padding: .8rem; }
+@media (prefers-reduced-motion: reduce) { .store-alert-layer, .store-alert-layer * { animation-duration: .001ms !important; transition-duration: .001ms !important; } }
+.admin-dialog:has(.store-alert-layer) { inset: 0; margin: auto; height: fit-content; transform: none; }

@@ -1,0 +1,30 @@
+:root {
+  --ui-lavender: #b9aee8;
+  --ui-lavender-light: #dfd7f7;
+  --ui-shell: #faf9f6;
+  --ui-surface: #fff;
+  --ui-ink: #1c1b29;
+  --ui-muted: #625e74;
+  --ui-border: #efedf5;
+  --ui-control-border: #d9d4e5;
+  --ui-control: #f4f2f8;
+  --ui-primary: #8b7be0;
+  --ui-action: #5945b0;
+  --ui-action-hover: #49379b;
+  --ui-dark: #242133;
+  --ui-nav-active: #dde6fb;
+  --ui-pastel-purple: #e4ddf7;
+  --ui-pastel-pink: #f9d9ec;
+  --ui-pastel-yellow: #fbf8c8;
+  --ui-pastel-blue: #e3eafb;
+  --ui-positive: #355026;
+  --ui-positive-bg: #e9f5c6;
+  --ui-negative: #8c2855;
+  --ui-negative-bg: #fde3ef;
+  --ui-danger: #ad2545;
+  --ui-on-dark: #fff;
+  --ui-overlay-color: rgb(31 24 54 / .40);
+  --ui-card-shadow: 0 3px 10px rgb(42 34 69 / .035);
+  --ui-motion: 180ms ease;
+  --ui-font: "Inter Variable", Inter, Arial, sans-serif;
+}

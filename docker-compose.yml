@@ -1,0 +1,84 @@
+services:
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-pasar_sembako}
+      MYSQL_USER: ${DB_USERNAME:-pasar_sembako}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=\"$$MYSQL_PASSWORD\" mysql -h 127.0.0.1 -u \"$$MYSQL_USER\" -D \"$$MYSQL_DATABASE\" -e 'SELECT 1' >/dev/null"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${BIND_ADDRESS:-127.0.0.1}:${BACKEND_PORT:-8000}:80"
+    environment:
+      APP_NAME: Pasar Sembako
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: ${APP_KEY:?Set APP_KEY in .env}
+      APP_URL: ${API_URL:-http://localhost:8000}
+      APP_LOCALE: id
+      LOG_CHANNEL: stderr
+      FRONTEND_URL: ${SITE_URL:-http://localhost:3000}
+      SANCTUM_STATEFUL_DOMAINS: ${SANCTUM_STATEFUL_DOMAINS:-localhost:3000}
+      SESSION_DOMAIN: ${SESSION_DOMAIN:-}
+      SESSION_SECURE_COOKIE: ${SESSION_SECURE_COOKIE:-false}
+      SESSION_ENCRYPT: "true"
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-}
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_DATABASE: ${DB_DATABASE:-pasar_sembako}
+      DB_USERNAME: ${DB_USERNAME:-pasar_sembako}
+      DB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
+      CACHE_STORE: database
+      STORE_PROMO_ENDS_AT: ${STORE_PROMO_ENDS_AT:-}
+      SESSION_DRIVER: database
+      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-admin@pasarsembako.test}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-}
+    volumes:
+      - uploads:/var/www/html/storage/app
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit(@file_get_contents('http://127.0.0.1/up') === false ? 1 : 0);"]
+      interval: 10s
+      timeout: 4s
+      retries: 8
+      start_period: 15s
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_API_URL: ${API_URL:-http://localhost:8000}
+        NEXT_PUBLIC_SITE_URL: ${SITE_URL:-http://localhost:3000}
+        NEXT_PUBLIC_ENABLE_CUSTOMER_ACCOUNT: ${NEXT_PUBLIC_ENABLE_CUSTOMER_ACCOUNT:-false}
+        NEXT_PUBLIC_CUSTOMER_LOGIN_URL: ${NEXT_PUBLIC_CUSTOMER_LOGIN_URL:-}
+        NEXT_PUBLIC_CUSTOMER_REGISTER_URL: ${NEXT_PUBLIC_CUSTOMER_REGISTER_URL:-}
+        NEXT_PUBLIC_STORE_WHATSAPP: ${STORE_WHATSAPP:-}
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      API_INTERNAL_URL: http://backend
+      ADMIN_FRONTEND_ORIGIN: ${SITE_URL:-http://localhost:3000}
+      NEXT_PUBLIC_SITE_URL: ${SITE_URL:-http://localhost:3000}
+    ports:
+      - "${BIND_ADDRESS:-127.0.0.1}:${FRONTEND_PORT:-3000}:3000"
+
+volumes:
+  mysql-data:
+  uploads:
